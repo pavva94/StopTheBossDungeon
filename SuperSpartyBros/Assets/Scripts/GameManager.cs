@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI; // include UI namespace so can reference UI elements
+using UnityEngine.Analytics;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
 
@@ -165,9 +167,14 @@ public class GameManager : MonoBehaviour {
 	public void LevelCompete() {
 		// save the current player prefs before moving to the next level
 		PlayerPrefManager.SavePlayerState(score,highscore,lives);
-
-		// use a coroutine to allow the player to get fanfare before moving to next level
-		StartCoroutine(LoadNextLevel());
+        Analytics.CustomEvent("fallDeath", new Dictionary<string, object>
+              {
+                { "highscore", highscore },
+                { "score", score },
+                { "lives", lives }
+              });
+        // use a coroutine to allow the player to get fanfare before moving to next level
+        StartCoroutine(LoadNextLevel());
 	}
 
 	// load the nextLevel after delay
